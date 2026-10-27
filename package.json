@@ -17,5 +17,8 @@
     "runner-marketplace"
   ],
   "author": "Time Saver Errands Services Team",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "puppeteer-core": "^25.16.0"
+  }
 }
