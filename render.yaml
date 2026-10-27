@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: chapchap-errands
+    name: timesaver-errands
     runtime: node
     plan: free
     buildCommand: npm install

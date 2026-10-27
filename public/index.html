@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ChapChap Errands | Swift On-Demand Errand Service</title>
+  <title>Time Saver Errands Services | Save Your Time, We Run the Town</title>
   
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -58,14 +58,14 @@
       <!-- Brand Logo -->
       <div class="flex items-center space-x-3 cursor-pointer shrink-0" onclick="app.setViewMode('customer')">
         <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-700 to-brand-500 flex items-center justify-center text-white shadow-md shadow-brand-500/20">
-          <i data-lucide="zap" class="w-5 h-5"></i>
+          <i data-lucide="clock" class="w-5 h-5"></i>
         </div>
         <div>
           <div class="flex items-center space-x-1.5">
-            <span class="font-extrabold text-xl tracking-tight text-slate-900">ChapChap<span class="text-brand-600">Errands</span></span>
+            <span class="font-extrabold text-xl tracking-tight text-slate-900">TimeSaver<span class="text-brand-600">Errands</span></span>
             <span class="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-brand-100 text-brand-800">Nairobi</span>
           </div>
-          <p class="text-[11px] text-slate-500 hidden sm:block">Matatu-Integrated On-Demand Errand Service</p>
+          <p class="text-[11px] text-slate-500 hidden sm:block font-medium">Save Your Time, We Run the Town</p>
         </div>
       </div>
 
@@ -435,9 +435,9 @@
             <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 mb-2">
               <i data-lucide="bike" class="w-4 h-4 text-emerald-600"></i> Earn Daily Across Nairobi
             </div>
-            <h2 class="text-2xl font-extrabold text-slate-900">Register as a ChapChap Errand Runner</h2>
+            <h2 class="text-2xl font-extrabold text-slate-900">Register as a Time Saver Errand Runner</h2>
             <p class="text-sm text-slate-500 mt-1">
-              Join our network of trusted errand runners. Complete tasks, get paid your labor fee plus daily matatu transit allowances.
+              Join our network of trusted errand runners. Save Nairobians valuable time, get paid your labor fee plus daily matatu transit allowances.
             </p>
           </div>
 
@@ -557,7 +557,7 @@
             <div class="pt-4 border-t border-slate-100 space-y-3">
               <label class="flex items-start gap-2.5 text-xs text-slate-600 cursor-pointer">
                 <input type="checkbox" required class="rounded text-brand-600 focus:ring-brand-500 mt-0.5">
-                <span>I confirm that the ID documents provided are authentic and belong to me. I agree to adhere to ChapChap customer safety, confidentiality, and promptness standards.</span>
+                <span>I confirm that the ID documents provided are authentic and belong to me. I agree to adhere to Time Saver customer safety, confidentiality, and promptness standards.</span>
               </label>
 
               <button type="submit" id="btn-submit-runner-reg" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm rounded-xl shadow-md transition flex items-center justify-center gap-2">
@@ -617,7 +617,7 @@
         <div id="runner-pending-alert" class="hidden p-4 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900 flex items-center gap-3">
           <i data-lucide="clock" class="w-6 h-6 text-amber-600 shrink-0"></i>
           <div>
-            <strong>Application Under Review:</strong> Your uploaded ID Front and ID Back documents are currently undergoing vetting by ChapChap Admin. You can explore available errands, but jobs can be claimed once verified.
+            <strong>Application Under Review:</strong> Your uploaded ID Front and ID Back documents are currently undergoing vetting by Time Saver Admin. You can explore available errands, but jobs can be claimed once verified.
           </div>
         </div>
 
@@ -671,7 +671,7 @@
             </div>
             <div>
               <div class="flex items-center gap-2">
-                <h2 class="text-xl font-extrabold text-white">ChapChap Operations Admin Portal</h2>
+                <h2 class="text-xl font-extrabold text-white">Time Saver Operations Admin Portal</h2>
                 <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-900 text-emerald-300 border border-emerald-700">Root Super Admin</span>
               </div>
               <p class="text-xs text-slate-400">Review runner ID documents, verify M-Pesa transactions, and manage live dispatch</p>
@@ -855,7 +855,7 @@
       <form id="form-runner-login" onsubmit="app.handleRunnerLogin(event)" class="space-y-3.5 hidden">
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">Runner Email or Phone</label>
-          <input type="text" id="login-run-term" required value="brian@chapchap.co.ke" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 focus:border-brand-500 outline-none">
+          <input type="text" id="login-run-term" required value="brian@timesaver.co.ke" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 focus:border-brand-500 outline-none">
         </div>
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">Password</label>
@@ -873,7 +873,7 @@
       <form id="form-admin-login" onsubmit="app.handleAdminLogin(event)" class="space-y-3.5 hidden">
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">Admin Email</label>
-          <input type="email" id="login-adm-email" required value="admin@chapchap.co.ke" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 focus:border-brand-500 outline-none">
+          <input type="email" id="login-adm-email" required value="admin@timesaver.co.ke" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 focus:border-brand-500 outline-none">
         </div>
         <div>
           <label class="block text-xs font-semibold text-slate-600 mb-1">Admin Password</label>
@@ -1077,9 +1077,9 @@
   <footer class="bg-white border-t border-slate-200 py-6 px-4 mt-auto">
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-3">
       <div class="flex items-center space-x-2">
-        <span class="font-bold text-slate-700">ChapChap Errands</span>
+        <span class="font-bold text-slate-700">Time Saver Errands Services</span>
         <span>•</span>
-        <span>Transparent Runner Labor + Matatu Transit Fare Engine</span>
+        <span class="font-medium text-brand-700">Save Your Time, We Run the Town</span>
       </div>
       <div class="flex items-center space-x-4">
         <button onclick="app.setViewMode('register-runner')" class="hover:text-emerald-600 font-medium">Become a Runner</button>

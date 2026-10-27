@@ -1,19 +1,21 @@
 {
-  "name": "chapchap-errands",
-  "version": "1.0.0",
-  "description": "On-demand minimalist errand service web platform with matatu fare quantification, live runner matching, identity disclosure, and in-app chat",
+  "name": "timesaver-errands-services",
+  "version": "1.1.0",
+  "description": "Time Saver Errands Services - Save Your Time, We Run the Town. On-demand errand service with matatu fare quantification, live runner matching, and secure delivery verification.",
   "main": "server.js",
   "type": "commonjs",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "node test-e2e.js"
   },
   "keywords": [
+    "timesaver",
     "errands",
     "delivery",
+    "nairobi",
     "matatu-fare",
-    "runner-marketplace",
-    "minimalist"
+    "runner-marketplace"
   ],
-  "author": "ChapChap Errands Team",
+  "author": "Time Saver Errands Services Team",
   "license": "ISC"
 }

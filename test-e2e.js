@@ -36,7 +36,7 @@ function get(url) {
 }
 
 async function runTests() {
-  console.log('--- Testing Full ChapChap Suite ---');
+  console.log('--- Testing Full Time Saver Errands Suite ---');
 
   // 1. Customer registration & login
   console.log('1. Testing Customer Registration & Login...');
@@ -80,7 +80,7 @@ async function runTests() {
   // 3. Admin Login & Verification
   console.log('3. Testing Admin Login & Runner Vetting...');
   const adminLogin = await post('http://localhost:3000/api/auth/login-admin', {
-    email: "admin@chapchap.co.ke",
+    email: "admin@timesaver.co.ke",
     password: "admin123"
   });
   console.log(`   Admin Logged In: ${adminLogin.data.admin?.name}`);

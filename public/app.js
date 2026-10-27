@@ -1,6 +1,6 @@
-// ChapChap Errands - Complete Client Application Logic
+// Time Saver Errands Services - Client Application Logic
 
-class ChapChapApp {
+class TimeSaverApp {
   constructor() {
     this.errands = [];
     this.runners = [];
@@ -8,9 +8,9 @@ class ChapChapApp {
     this.adminOverview = {};
     
     // Auth Sessions (persisted in localStorage)
-    this.currentUser = JSON.parse(localStorage.getItem('chapchap_user') || 'null');
-    this.currentRunner = JSON.parse(localStorage.getItem('chapchap_runner') || 'null');
-    this.currentAdmin = JSON.parse(localStorage.getItem('chapchap_admin') || 'null');
+    this.currentUser = JSON.parse(localStorage.getItem('timesaver_user') || localStorage.getItem('chapchap_user') || 'null');
+    this.currentRunner = JSON.parse(localStorage.getItem('timesaver_runner') || localStorage.getItem('chapchap_runner') || 'null');
+    this.currentAdmin = JSON.parse(localStorage.getItem('timesaver_admin') || localStorage.getItem('chapchap_admin') || 'null');
 
     this.activeRunnerId = this.currentRunner?.id || 'RUN-101';
     this.currentCategory = 'shopping';
@@ -260,7 +260,7 @@ class ChapChapApp {
       if (!res.ok) throw new Error(data.error || "Login failed");
 
       this.currentUser = data.user;
-      localStorage.setItem('chapchap_user', JSON.stringify(data.user));
+      localStorage.setItem('timesaver_user', JSON.stringify(data.user));
       this.updateAuthPill();
       this.closeAuthModal();
       this.showToast(`Welcome back, ${data.user.name}!`, 'success');
@@ -297,10 +297,10 @@ class ChapChapApp {
       if (!res.ok) throw new Error(data.error || "Registration failed");
 
       this.currentUser = data.user;
-      localStorage.setItem('chapchap_user', JSON.stringify(data.user));
+      localStorage.setItem('timesaver_user', JSON.stringify(data.user));
       this.updateAuthPill();
       this.closeAuthModal();
-      this.showToast(`Account created! Welcome to ChapChap, ${data.user.name}!`, 'success');
+      this.showToast(`Account created! Welcome to Time Saver, ${data.user.name}!`, 'success');
 
       const nameInput = document.getElementById('input-customer-name');
       const phoneInput = document.getElementById('input-customer-phone');
@@ -330,7 +330,7 @@ class ChapChapApp {
 
       this.currentRunner = data.runner;
       this.activeRunnerId = data.runner.id;
-      localStorage.setItem('chapchap_runner', JSON.stringify(data.runner));
+      localStorage.setItem('timesaver_runner', JSON.stringify(data.runner));
       this.updateAuthPill();
       this.updateRunnerProfileHeader();
       this.closeAuthModal();
@@ -357,7 +357,7 @@ class ChapChapApp {
       if (!res.ok) throw new Error(data.error || "Admin login failed");
 
       this.currentAdmin = data.admin;
-      localStorage.setItem('chapchap_admin', JSON.stringify(data.admin));
+      localStorage.setItem('timesaver_admin', JSON.stringify(data.admin));
       this.updateAuthPill();
       this.closeAuthModal();
       this.showToast("Admin access granted", 'success');
@@ -372,9 +372,9 @@ class ChapChapApp {
     this.currentUser = null;
     this.currentRunner = null;
     this.currentAdmin = null;
-    localStorage.removeItem('chapchap_user');
-    localStorage.removeItem('chapchap_runner');
-    localStorage.removeItem('chapchap_admin');
+    localStorage.removeItem('timesaver_user');
+    localStorage.removeItem('timesaver_runner');
+    localStorage.removeItem('timesaver_admin');
     this.updateAuthPill();
     this.setViewMode('customer');
     this.showToast("Signed out successfully", 'info');
@@ -437,10 +437,10 @@ class ChapChapApp {
 
       this.currentRunner = data.runner;
       this.activeRunnerId = data.runner.id;
-      localStorage.setItem('chapchap_runner', JSON.stringify(data.runner));
+      localStorage.setItem('timesaver_runner', JSON.stringify(data.runner));
       this.updateAuthPill();
 
-      alert(`🎉 Application Submitted Successfully!\n\nYour profile and ID documents (Front & Back) are now with ChapChap Admin for verification. You can now access your runner portal.`);
+      alert(`🎉 Application Submitted Successfully!\n\nYour profile and ID documents (Front & Back) are now with Time Saver Admin for verification. You can now access your runner portal.`);
       
       this.setViewMode('runner');
 
@@ -680,7 +680,7 @@ class ChapChapApp {
 
   adminLogout() {
     this.currentAdmin = null;
-    localStorage.removeItem('chapchap_admin');
+    localStorage.removeItem('timesaver_admin');
     this.updateAuthPill();
     this.setViewMode('customer');
     this.showToast("Logged out from Admin Portal", 'info');
@@ -1415,4 +1415,4 @@ class ChapChapApp {
 }
 
 // Global App Instance
-window.app = new ChapChapApp();
+window.app = new TimeSaverApp();

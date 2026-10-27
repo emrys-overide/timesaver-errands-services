@@ -1,41 +1,39 @@
-# ChapChap Errands ⚡
+# Time Saver Errands Services ⏱️
 
-> **On-Demand Minimalist Errand Service Platform** featuring Runner Registration with National ID Front & Back verification, Customer Authentication, Operations Admin Portal, Matatu Fare Quantification, Live Runner Matching, In-App Chat, and Customer Release PIN Security.
+> **Save Your Time, We Run the Town.**  
+> *Nairobi's On-Demand Errand & Delivery Service with Integrated Matatu Transit Fare Quantification, Runner ID Document Verification, In-App Chat, and Customer Release PIN Security.*
 
 ---
 
-## 🌟 Key Features
+## 🎯 Official Brand & Slogan
 
-### 1. 🚴 Errand Runner Self-Registration & ID Document Vetting
-- **Self-Service Registration**:
-  - Full Name, Phone (M-Pesa registered), Email, Password, National ID Number.
-  - Active base stage/area (e.g. Kencom/CBD, Westlands, Kilimani, Upperhill, Roysambu, etc.).
-  - Transit method (Foot & Matatu Transit, Boda, Bicycle).
-  - Short Bio and errand specialties.
+- **Brand Name**: **Time Saver Errands Services**
+- **Primary Slogan**: *"Save Your Time, We Run the Town."*
+- **Alternative Tagline**: *"Skip the Lines, Skip the Traffic — Your Errands Handled Swiftly."*
+
+---
+
+## 🌟 Key Platform Features
+
+### 1. 🚴 Errand Runner Registration with Biometrics & ID Verification
+- Self-registration for errand runners across Nairobi stages.
 - **Biometric & Identity Document Uploads**:
   - **Selfie / Clear Photo of Themselves** (Avatar)
   - **National ID Card - FRONT Photo**
   - **National ID Card - BACKWARD (BACK) Photo**
-- **Pending Review Workflow**:
-  - Registered runners enter a "Pending Review" state until verified by the Operations Admin.
+- Applications enter a **"Pending Review"** state until verified by an Admin.
 
-### 2. 🔐 User (Customer) Account Creation & Authentication
-- Full sign up and login with email & password.
-- Logged-in customers have their contact details automatically pre-filled when placing errand orders.
-- Unified modal with seamless tab switching between Customer Login, Customer Sign Up, Runner Login, and Admin Login.
+### 2. 🔐 Customer Account Creation & Sign In
+- Full customer authentication with Name, Phone, Email, and Password.
+- Automatic contact pre-fill when placing errand orders.
+- Unified switcher between Customer, Runner, and Admin logins.
 
 ### 3. 🛡️ Operations Admin Portal (`/api/admin`)
-- **Credentials**: `admin@chapchap.co.ke` / `admin123`
-- **Executive Metrics Dashboard**:
-  - Total Errands, Completed Errands, Gross Volume (KES).
-  - Total Matatu Transit Allowance distributed.
-  - Pending Runner Applications count.
-- **National ID Document Inspector**:
-  - Inspect the runner's Selfie, Front ID, and Backward ID side-by-side.
-  - Actions: **"Approve & Issue Vetted Badge"** or **"Reject"**.
-- **Platform Errands & Payment Verifier**:
-  - View all errands, customer & runner details, and Customer Secret Release PINs.
-  - One-click toggle to mark manual M-Pesa payments (Till 542890) as **Verified**.
+- **Credentials**: `admin@timesaver.co.ke` / `admin123`
+- **Metrics Dashboard**: Total Errands, Completed Errands, Gross Volume (KES), Matatu Transit Allowances distributed, and Pending Runner Applications count.
+- **National ID Document Inspector**: Inspect the runner's selfie, **National ID Front**, and **National ID Backward** side-by-side full size.
+- **Actions**: Approve (issues verified badge and unlocks runner dispatch) or Reject application.
+- **Payment Verifier**: Toggle manual demo M-Pesa payments (Till `542890`) between *Pending* and *Verified*.
 
 ### 4. 🛒 Errand Placement & Matatu Fare Quantification
 - Calculates fair base labor fee based on errand category (Shopping, Office/Queueing, Parcel, Pharmacy, Hardware, Custom).
@@ -46,7 +44,7 @@
 
 ### 5. 📱 Demo Manual Payment Box (No In-App Gateway)
 - Frictionless payment instructions:
-  - **Demo M-Pesa Buy Goods Till**: `542890` *(ChapChap Errands Hub)*
+  - **Demo M-Pesa Buy Goods Till**: `542890` *(Time Saver Errands Services)*
   - **Or Demo Phone**: `0798 000 123`
   - **Reference**: Order ID (e.g., `ERR-7102`)
 

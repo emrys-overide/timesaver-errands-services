@@ -149,7 +149,7 @@ const server = http.createServer((req, res) => {
     const clientId = Date.now();
     const newClient = { id: clientId, res };
     sseClients.push(newClient);
-    res.write(`event: connected\ndata: ${JSON.stringify({ message: "ChapChap Dispatch Connected" })}\n\n`);
+    res.write(`event: connected\ndata: ${JSON.stringify({ message: "Time Saver Dispatch Connected" })}\n\n`);
     req.on('close', () => {
       sseClients = sseClients.filter(c => c.id !== clientId);
     });
@@ -321,7 +321,7 @@ const server = http.createServer((req, res) => {
         rating: 5.0,
         completedErrands: 0,
         activeLocation: payload.activeLocation || 'CBD / Kencom Stage',
-        bio: payload.bio || 'Ready to run errands efficiently across Nairobi.',
+        bio: payload.bio || 'Ready to save your time and run errands efficiently across Nairobi.',
         vehicleType: payload.vehicleType || 'Foot & Matatu Transit',
         badge: 'Pending Verification',
         createdAt: new Date().toISOString()
@@ -341,7 +341,7 @@ const server = http.createServer((req, res) => {
       res.writeHead(201, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({
         success: true,
-        message: "Registration successful! Your profile and ID documents are submitted for Admin verification.",
+        message: "Registration successful! Your profile and ID documents are submitted for Time Saver Admin verification.",
         runner: safeRunner
       }));
     });
@@ -530,7 +530,7 @@ const server = http.createServer((req, res) => {
         runnerId: null,
         runner: null,
         createdAt: new Date().toISOString(),
-        demoPaymentAccount: "Till: 542890 (ChapChap Errands Hub)",
+        demoPaymentAccount: "Till: 542890 (Time Saver Errands Services)",
         demoPaymentPhone: "+254 798 000 123",
         paymentStatus: "Pending Manual M-Pesa",
         messages: []
@@ -743,7 +743,7 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`🚀 ChapChap Errand Service running on port ${PORT}`);
+  console.log(`🚀 Time Saver Errands Services running on port ${PORT}`);
 });
 
 module.exports = server;
