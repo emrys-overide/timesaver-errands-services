@@ -122,8 +122,8 @@ const MIME_TYPES = {
   '.ico': 'image/x-icon'
 };
 
-// Main Server
-const server = http.createServer((req, res) => {
+// Main Request Handler
+const handleRequest = (req, res) => {
   const parsedUrl = url.parse(req.url, true);
   const pathname = parsedUrl.pathname;
   const method = req.method;
@@ -740,10 +740,14 @@ const server = http.createServer((req, res) => {
       res.end(content);
     }
   });
-});
+};
 
-server.listen(PORT, () => {
-  console.log(`🚀 Time Saver Errands Services running on port ${PORT}`);
-});
+const server = http.createServer(handleRequest);
 
-module.exports = server;
+if (require.main === module) {
+  server.listen(PORT, () => {
+    console.log(`🚀 Time Saver Errands Services running on port ${PORT}`);
+  });
+}
+
+module.exports = handleRequest;
