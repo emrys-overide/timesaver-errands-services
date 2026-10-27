@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChapChap Errands | Swift On-Demand Errand Service</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              200: '#a7f3d0',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              850: '#064e3b',
+              900: '#022c22'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col antialiased selection:bg-brand-500 selection:text-white">
+
+  <!-- Top Announcement Bar -->
+  <div class="bg-slate-900 text-slate-300 px-4 py-2 text-xs md:text-sm flex flex-wrap items-center justify-between border-b border-slate-800">
+    <div class="flex items-center space-x-2">
+      <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-900/70 text-emerald-300 border border-emerald-700/60">
+        Demo Errand Network
+      </span>
+      <span>Payments are manual via Demo M-Pesa Till: <strong class="text-white font-mono">542890</strong> or Phone: <strong class="text-white font-mono">0798 000 123</strong></span>
+    </div>
+    <div class="flex items-center space-x-3 text-xs mt-1 md:mt-0">
+      <button onclick="app.openAdminPortal()" class="text-emerald-400 hover:text-emerald-300 flex items-center gap-1 font-semibold">
+        <i data-lucide="shield" class="w-3.5 h-3.5"></i> Admin Portal
+      </button>
+      <span>•</span>
+      <button onclick="app.resetDemoData()" class="text-slate-400 hover:text-white underline">Reset Demo</button>
+    </div>
+  </div>
+
+  <!-- Main Navigation Header -->
+  <header class="glass-header sticky top-0 z-40 px-4 lg:px-8 py-3 shadow-sm">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
+      
+      <!-- Brand Logo -->
+      <div class="flex items-center space-x-3 cursor-pointer shrink-0" onclick="app.setViewMode('customer')">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-700 to-brand-500 flex items-center justify-center text-white shadow-md shadow-brand-500/20">
+          <i data-lucide="zap" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <div class="flex items-center space-x-1.5">
+            <span class="font-extrabold text-xl tracking-tight text-slate-900">ChapChap<span class="text-brand-600">Errands</span></span>
+            <span class="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-brand-100 text-brand-800">Nairobi</span>
+          </div>
+          <p class="text-[11px] text-slate-500 hidden sm:block">Matatu-Integrated On-Demand Errand Service</p>
+        </div>
+      </div>
+
+      <!-- Mode Switcher Navigation -->
+      <div class="hidden sm:flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200">
+        <button id="btn-mode-customer" onclick="app.setViewMode('customer')" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs md:text-sm font-semibold transition-all shadow-sm bg-white text-slate-900">
+          <i data-lucide="user" class="w-4 h-4 text-brand-600"></i>
+          <span>Customer</span>
+        </button>
+        <button id="btn-mode-runner" onclick="app.setViewMode('runner')" class="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs md:text-sm font-semibold text-slate-600 hover:text-slate-900 transition-all">
+          <i data-lucide="bike" class="w-4 h-4 text-amber-500"></i>
+          <span>Runners Pool</span>
+          <span id="badge-open-errands-count" class="ml-1 px-1.5 py-0.2 text-[10px] rounded-full bg-amber-500 text-white font-bold">1</span>
+        </button>
+        <button id="btn-mode-register-runner" onclick="app.setViewMode('register-runner')" class="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all">
+          <i data-lucide="user-plus" class="w-3.5 h-3.5 text-emerald-600"></i>
+          <span>Become a Runner</span>
+        </button>
+        <button id="btn-mode-split" onclick="app.setViewMode('split')" class="hidden lg:flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-500 hover:text-slate-900 transition-all" title="View Customer & Runner screens side-by-side">
+          <i data-lucide="columns-2" class="w-3.5 h-3.5"></i>
+          <span>Split Demo</span>
+        </button>
+      </div>
+
+      <!-- User Account / Auth Actions -->
+      <div class="flex items-center space-x-2">
+        <!-- Logged In User Pill -->
+        <div id="auth-user-pill" class="hidden items-center gap-2 bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-xs">
+          <div class="w-6 h-6 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center text-xs font-bold" id="auth-user-initial">M</div>
+          <span class="text-xs font-semibold text-slate-800 max-w-[100px] truncate" id="auth-user-name">Mary W.</span>
+          <button onclick="app.handleLogout()" class="text-slate-400 hover:text-rose-600 ml-1" title="Sign Out">
+            <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+
+        <!-- Logged Out Button -->
+        <button id="btn-open-auth" onclick="app.openAuthModal('customer-login')" class="flex items-center space-x-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl transition">
+          <i data-lucide="log-in" class="w-3.5 h-3.5"></i>
+          <span>Sign In / Sign Up</span>
+        </button>
+
+        <!-- Post Errand CTA Button -->
+        <button onclick="app.scrollToOrderForm()" class="flex items-center space-x-1.5 px-3.5 py-2 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs sm:text-sm rounded-xl shadow-sm transition">
+          <i data-lucide="plus-circle" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">Post Errand</span>
+          <span class="sm:hidden">Post</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Notification Toast Container -->
+  <div id="toast-container" class="fixed top-20 right-4 z-50 flex flex-col space-y-2 pointer-events-none max-w-sm"></div>
+
+  <!-- Main Content Layout -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 lg:p-8">
+
+    <!-- ========================================== -->
+    <!-- VIEW CONTAINER: CUSTOMER / RUNNER / ADMIN  -->
+    <!-- ========================================== -->
+    <div id="main-view-wrapper" class="w-full">
+
+      <!-- ========================================== -->
+      <!-- VIEW 1: CUSTOMER VIEW                      -->
+      <!-- ========================================== -->
+      <section id="customer-view" class="space-y-8">
+        
+        <!-- Hero Section -->
+        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 text-white p-6 md:p-10 shadow-lg">
+          <div class="relative z-10 max-w-2xl space-y-3">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+              <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+              Nairobi On-Demand Runners with Fair Matatu Transit
+            </div>
+            <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight">Need an Errand Done in Town or Anywhere in Nairobi?</h1>
+            <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+              From queuing at Huduma Centre, picking up medicine, to urgent parcel deliveries. Our verified runners run it for you while the system quantifies the exact labor and matatu transit fare!
+            </p>
+            <div class="pt-2 flex flex-wrap gap-3">
+              <button onclick="app.scrollToOrderForm()" class="px-5 py-2.5 bg-brand-500 hover:bg-brand-600 font-semibold text-sm rounded-xl shadow transition flex items-center gap-2">
+                <i data-lucide="file-plus" class="w-4 h-4"></i>
+                Place Your Errand Order
+              </button>
+              <button onclick="app.setViewMode('register-runner')" class="px-4 py-2.5 bg-white/10 hover:bg-white/20 font-medium text-sm rounded-xl backdrop-blur-sm transition flex items-center gap-2">
+                <i data-lucide="user-check" class="w-4 h-4"></i>
+                Register as a Runner
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Two Column Layout: Order Form (Left) & Active Trackers (Right) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+          <!-- Left Column: Errand Placement Form -->
+          <div id="order-form-container" class="lg:col-span-7 bg-white p-6 md:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+            
+            <div class="border-b border-slate-100 pb-4">
+              <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                <i data-lucide="sparkles" class="w-5 h-5 text-brand-600"></i>
+                Place Your Errand Order
+              </h2>
+              <p class="text-sm text-slate-500 mt-1">Specify what you need done. The system will automatically calculate the fair runner labor fee and matatu transit fare.</p>
+            </div>
+
+            <form id="errand-order-form" onsubmit="app.handleOrderSubmit(event)" class="space-y-5">
+              
+              <!-- Errand Category -->
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">1. Select Errand Category</label>
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5" id="category-selector-group">
+                  <button type="button" onclick="app.setCategory('shopping')" class="category-btn p-3 rounded-xl border border-slate-200 hover:border-brand-500 text-left transition-all active-category bg-brand-50 border-brand-500" data-cat="shopping">
+                    <div class="text-brand-600 mb-1"><i data-lucide="shopping-cart" class="w-5 h-5"></i></div>
+                    <div class="font-bold text-xs text-slate-900">Shopping / Market</div>
+                    <div class="text-[11px] text-slate-500">Supermarket, Marikiti, Meat</div>
+                  </button>
+                  <button type="button" onclick="app.setCategory('queueing')" class="category-btn p-3 rounded-xl border border-slate-200 hover:border-brand-500 text-left transition-all" data-cat="queueing">
+                    <div class="text-amber-600 mb-1"><i data-lucide="landmark" class="w-5 h-5"></i></div>
+                    <div class="font-bold text-xs text-slate-900">Office / Queueing</div>
+                    <div class="text-[11px] text-slate-500">Huduma Centre, KRA, Bank</div>
+                  </button>
+                  <button type="button" onclick="app.setCategory('parcel')" class="category-btn p-3 rounded-xl border border-slate-200 hover:border-brand-500 text-left transition-all" data-cat="parcel">
+                    <div class="text-blue-600 mb-1"><i data-lucide="package" class="w-5 h-5"></i></div>
+                    <div class="font-bold text-xs text-slate-900">Parcel Pickup</div>
+                    <div class="text-[11px] text-slate-500">Documents, packages, drop</div>
+                  </button>
+                  <button type="button" onclick="app.setCategory('pharmacy')" class="category-btn p-3 rounded-xl border border-slate-200 hover:border-brand-500 text-left transition-all" data-cat="pharmacy">
+                    <div class="text-rose-600 mb-1"><i data-lucide="cross" class="w-5 h-5"></i></div>
+                    <div class="font-bold text-xs text-slate-900">Pharmacy & Health</div>
+                    <div class="text-[11px] text-slate-500">Urgent medicines, baby care</div>
+                  </button>
+                  <button type="button" onclick="app.setCategory('hardware')" class="category-btn p-3 rounded-xl border border-slate-200 hover:border-brand-500 text-left transition-all" data-cat="hardware">
+                    <div class="text-indigo-600 mb-1"><i data-lucide="wrench" class="w-5 h-5"></i></div>
+                    <div class="font-bold text-xs text-slate-900">Hardware & Parts</div>
+                    <div class="text-[11px] text-slate-500">Tools, electronics, supplies</div>
+                  </button>
+                  <button type="button" onclick="app.setCategory('general')" class="category-btn p-3 rounded-xl border border-slate-200 hover:border-brand-500 text-left transition-all" data-cat="general">
+                    <div class="text-purple-600 mb-1"><i data-lucide="help-circle" class="w-5 h-5"></i></div>
+                    <div class="font-bold text-xs text-slate-900">Other Custom Run</div>
+                    <div class="text-[11px] text-slate-500">Any personalized task</div>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Errand Title & Details -->
+              <div class="space-y-3">
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">2. Errand Details & Checklist</label>
+                <div>
+                  <input type="text" id="input-title" required placeholder="Short summary (e.g. Pick up stamped passport from Nyayo House)" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 text-sm font-medium outline-none">
+                </div>
+                <div>
+                  <textarea id="input-description" rows="3" required placeholder="Full checklist, items to buy, counter numbers, or special instructions for the runner..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 text-sm outline-none"></textarea>
+                </div>
+              </div>
+
+              <!-- Locations & Matatu Route Stages -->
+              <div class="space-y-3 bg-slate-50 p-4 rounded-xl border border-slate-200/80">
+                <div class="flex items-center justify-between">
+                  <label class="block text-xs font-bold uppercase tracking-wider text-slate-700">3. Locations & Matatu Route</label>
+                  <span class="text-emerald-700 font-semibold text-[11px] flex items-center gap-1">
+                    <i data-lucide="bus" class="w-3.5 h-3.5"></i> Integrated Matatu Fare
+                  </span>
+                </div>
+
+                <!-- Pickup Point -->
+                <div>
+                  <span class="text-xs font-medium text-slate-500">Where the errand starts / Shop / Office:</span>
+                  <div class="relative mt-1">
+                    <i data-lucide="store" class="w-4 h-4 text-slate-400 absolute left-3 top-3"></i>
+                    <input type="text" id="input-pickup" required placeholder="e.g. Carrefour Sarit Centre or Huduma GPO" class="w-full pl-9 pr-3 py-2 text-sm rounded-lg border border-slate-300 focus:border-brand-500 outline-none">
+                  </div>
+                </div>
+
+                <!-- Drop-off Point -->
+                <div>
+                  <span class="text-xs font-medium text-slate-500">Where items should be delivered / Your Location:</span>
+                  <div class="relative mt-1">
+                    <i data-lucide="home" class="w-4 h-4 text-slate-400 absolute left-3 top-3"></i>
+                    <input type="text" id="input-dropoff" required placeholder="e.g. Rhapta Road, Westlands, Court 4B" class="w-full pl-9 pr-3 py-2 text-sm rounded-lg border border-slate-300 focus:border-brand-500 outline-none">
+                  </div>
+                </div>
+
+                <!-- Matatu Stages Selector Grid -->
+                <div class="pt-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Boarding Stage (Pickup Area)</label>
+                    <select id="select-stage-from" onchange="app.recalculateEstimate()" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white font-medium focus:border-brand-500 outline-none">
+                      <option value="CBD (Kencom/Railways)">CBD (Kencom / Railways / Koja)</option>
+                      <option value="Westlands">Westlands Stage</option>
+                      <option value="Kilimani / Yaya">Kilimani / Yaya Centre</option>
+                      <option value="Upperhill">Upperhill / Hospital Stage</option>
+                      <option value="Roysambu / Thika Rd">Roysambu / Thika Road</option>
+                      <option value="Karen / Galleria">Karen / Galleria Stage</option>
+                      <option value="South B / South C">South B / South C</option>
+                      <option value="Eastleigh / Pangani">Eastleigh / Pangani</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Destination Stage (Delivery Area)</label>
+                    <select id="select-stage-to" onchange="app.recalculateEstimate()" class="w-full px-3 py-2 text-xs rounded-lg border border-slate-300 bg-white font-medium focus:border-brand-500 outline-none">
+                      <option value="Westlands">Westlands Stage</option>
+                      <option value="Kilimani / Yaya">Kilimani / Yaya Centre</option>
+                      <option value="CBD (Kencom/Railways)">CBD (Kencom / Railways)</option>
+                      <option value="Upperhill">Upperhill / Britam Tower</option>
+                      <option value="Roysambu / Thika Rd">Roysambu / TRM</option>
+                      <option value="Karen / Galleria">Karen / Hub / Galleria</option>
+                      <option value="South B / South C">South B / South C</option>
+                      <option value="Eastleigh / Pangani">Eastleigh / Garissa Lodge</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Peak Matatu Traffic & Rush Toggle -->
+                <div class="flex items-center justify-between pt-1">
+                  <label class="flex items-center space-x-2 text-xs text-slate-700 cursor-pointer">
+                    <input type="checkbox" id="check-peak" onchange="app.recalculateEstimate()" class="rounded text-brand-600 focus:ring-brand-500 h-4 w-4">
+                    <span>Peak Hours (Rush hour matatu fare)</span>
+                  </label>
+                  <label class="flex items-center space-x-2 text-xs text-slate-700 cursor-pointer">
+                    <input type="checkbox" id="check-urgent" onchange="app.recalculateEstimate()" class="rounded text-brand-600 focus:ring-brand-500 h-4 w-4">
+                    <span class="font-semibold text-amber-700">Priority Rush (+KES 100)</span>
+                  </label>
+                </div>
+
+              </div>
+
+              <!-- Live Cost Quantification Breakdown Card -->
+              <div class="bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200 p-4 rounded-xl space-y-3">
+                <div class="flex items-center justify-between border-b border-emerald-200/60 pb-2">
+                  <div class="flex items-center gap-1.5 text-xs font-bold text-emerald-900 uppercase tracking-wider">
+                    <i data-lucide="calculator" class="w-4 h-4 text-emerald-600"></i>
+                    <span>System Cost Quantification</span>
+                  </div>
+                  <span class="text-[11px] bg-emerald-200/60 text-emerald-800 font-semibold px-2 py-0.5 rounded-full">Automated Fair Quote</span>
+                </div>
+
+                <div class="space-y-1.5 text-xs text-slate-700">
+                  <div class="flex justify-between">
+                    <span>Base Errand Runner Fee (Task & Time):</span>
+                    <span id="quote-base-fee" class="font-semibold">KES 320</span>
+                  </div>
+                  <div class="flex justify-between text-emerald-800">
+                    <span class="flex items-center gap-1">
+                      <i data-lucide="bus" class="w-3 h-3"></i> Matatu Commute Allowance:
+                    </span>
+                    <span id="quote-matatu-fare" class="font-bold">+ KES 50</span>
+                  </div>
+                  <div class="flex justify-between text-slate-500 text-[11px]">
+                    <span>Estimated Distance & Commute Time:</span>
+                    <span id="quote-distance">~4.5 km · 25-35 mins</span>
+                  </div>
+                </div>
+
+                <div class="border-t border-emerald-300 pt-2 flex items-baseline justify-between">
+                  <div>
+                    <span class="text-xs font-bold text-slate-800 block">Total Errand Payable:</span>
+                    <span class="text-[10px] text-slate-500">Runner labor + Matatu allowance included</span>
+                  </div>
+                  <div class="text-right">
+                    <span id="quote-total" class="text-2xl font-extrabold text-emerald-700">KES 370</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Customer Contact Details -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-xs font-medium text-slate-600 mb-1">Your Full Name</label>
+                  <input type="text" id="input-customer-name" required value="Mary Wanjiku" placeholder="Your name" class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:border-brand-500 outline-none">
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-slate-600 mb-1">Your Phone (M-Pesa / SMS)</label>
+                  <input type="tel" id="input-customer-phone" required value="+254 712 990 011" placeholder="+254 7XX XXX XXX" class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:border-brand-500 outline-none">
+                </div>
+              </div>
+
+              <!-- Security PIN Callout Note -->
+              <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900 flex items-start gap-2.5">
+                <i data-lucide="shield-check" class="w-5 h-5 text-amber-600 shrink-0 mt-0.5"></i>
+                <div>
+                  <strong class="font-semibold">Security Release PIN:</strong> Once you submit, you will receive a 4-digit code. Keep this private and only share it with your runner once they complete the errand!
+                </div>
+              </div>
+
+              <!-- Submit Button -->
+              <button type="submit" id="btn-submit-order" class="w-full py-3.5 px-4 bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm md:text-base rounded-xl shadow-md transition flex items-center justify-center gap-2">
+                <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+                <span>Post Errand & Notify Available Runners</span>
+              </button>
+
+            </form>
+          </div>
+
+          <!-- Right Column: Live Errand Tracker & Order Status -->
+          <div class="lg:col-span-5 space-y-6">
+            
+            <!-- Demo Manual Payment Box -->
+            <div class="clean-card p-5 bg-white border border-slate-200 space-y-3">
+              <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
+                  <i data-lucide="banknote" class="w-4 h-4 text-emerald-600"></i>
+                  Manual Demo Payment Details
+                </span>
+                <span class="text-[10px] bg-slate-100 font-semibold px-2 py-0.5 rounded text-slate-600">No In-App Card</span>
+              </div>
+              <p class="text-xs text-slate-500">
+                To keep this system lightweight and simple for all users, payment is made directly via M-Pesa. Use the demo number below:
+              </p>
+              <div class="bg-slate-50 p-3 rounded-xl border border-slate-200/80 space-y-2 text-xs">
+                <div class="flex items-center justify-between">
+                  <span class="text-slate-500">Demo Buy Goods Till:</span>
+                  <div class="flex items-center gap-1.5">
+                    <span class="font-mono font-bold text-slate-900 text-sm">542890</span>
+                    <button type="button" onclick="app.copyToClipboard('542890', 'Till Number')" class="text-slate-400 hover:text-brand-600">
+                      <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-slate-500">Or Send Money Phone:</span>
+                  <div class="flex items-center gap-1.5">
+                    <span class="font-mono font-bold text-slate-900 text-sm">0798 000 123</span>
+                    <button type="button" onclick="app.copyToClipboard('0798000123', 'Phone Number')" class="text-slate-400 hover:text-brand-600">
+                      <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between text-slate-500">
+                  <span>Account / Reference:</span>
+                  <span class="font-mono font-semibold text-brand-700" id="demo-account-ref">Your Errand ID (e.g. ERR-7102)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Active / Recent Customer Errands Section -->
+            <div id="active-orders-section" class="space-y-4">
+              <div class="flex items-center justify-between">
+                <h3 class="font-bold text-slate-900 text-base flex items-center gap-2">
+                  <i data-lucide="list-checks" class="w-5 h-5 text-brand-600"></i>
+                  <span>My Active Errands</span>
+                </h3>
+                <span id="customer-active-badge" class="text-xs font-semibold px-2 py-0.5 rounded-full bg-brand-100 text-brand-800">
+                  Loading...
+                </span>
+              </div>
+
+              <!-- Container where customer's active orders render -->
+              <div id="customer-errands-list" class="space-y-4">
+                <!-- Dynamically populated via JS -->
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ========================================== -->
+      <!-- VIEW 2: RUNNER REGISTRATION FORM           -->
+      <!-- ========================================== -->
+      <section id="register-runner-view" class="max-w-3xl mx-auto space-y-6 hidden">
+        <div class="bg-white p-6 md:p-10 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+          
+          <div class="border-b border-slate-100 pb-4">
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 mb-2">
+              <i data-lucide="bike" class="w-4 h-4 text-emerald-600"></i> Earn Daily Across Nairobi
+            </div>
+            <h2 class="text-2xl font-extrabold text-slate-900">Register as a ChapChap Errand Runner</h2>
+            <p class="text-sm text-slate-500 mt-1">
+              Join our network of trusted errand runners. Complete tasks, get paid your labor fee plus daily matatu transit allowances.
+            </p>
+          </div>
+
+          <form id="runner-registration-form" onsubmit="app.handleRunnerRegistration(event)" class="space-y-6">
+            
+            <!-- Personal Details Grid -->
+            <div class="space-y-4">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700">1. Personal & Contact Information</h3>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Full Legal Name (as on ID) *</label>
+                  <input type="text" id="reg-runner-name" required placeholder="e.g. John Mwangi Kimani" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-brand-500 outline-none text-sm">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Phone Number (M-Pesa) *</label>
+                  <input type="tel" id="reg-runner-phone" required placeholder="e.g. +254 712 345 678" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-brand-500 outline-none text-sm">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Email Address *</label>
+                  <input type="email" id="reg-runner-email" required placeholder="e.g. john@example.com" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-brand-500 outline-none text-sm">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Create Password *</label>
+                  <input type="password" id="reg-runner-password" required placeholder="Min 6 characters" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-brand-500 outline-none text-sm">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">National ID / Passport Number *</label>
+                  <input type="text" id="reg-runner-id-number" required placeholder="e.g. 34892104" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-brand-500 outline-none text-sm">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Primary Base / Stage Area *</label>
+                  <select id="reg-runner-location" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-brand-500 outline-none text-sm bg-white">
+                    <option value="CBD / Kencom Stage">CBD (Kencom / Railways / Koja)</option>
+                    <option value="Westlands / Sarit Centre">Westlands / Sarit Centre</option>
+                    <option value="Kilimani / Yaya Centre">Kilimani / Yaya Centre</option>
+                    <option value="Upperhill / Hospital Stage">Upperhill / Hospital Stage</option>
+                    <option value="Roysambu / Thika Rd">Roysambu / Thika Road</option>
+                    <option value="Karen / Galleria">Karen / Galleria</option>
+                    <option value="South B / South C">South B / South C</option>
+                    <option value="Eastleigh / Pangani">Eastleigh / Pangani</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Experience & Bio -->
+            <div class="space-y-4">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700">2. Errand Experience & Transit Mode</h3>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Preferred Transit Mode</label>
+                  <select id="reg-runner-vehicle" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-brand-500 outline-none text-sm bg-white">
+                    <option value="Foot & Matatu Transit">Foot & Matatu Transit</option>
+                    <option value="Motorbike / Boda Boda">Motorbike / Boda Boda</option>
+                    <option value="Bicycle & Walking">Bicycle & Walking</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Brief Bio / Specialty</label>
+                  <input type="text" id="reg-runner-bio" placeholder="e.g. Familiar with CBD offices, fast queueing at Huduma GPO" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-brand-500 outline-none text-sm">
+                </div>
+              </div>
+            </div>
+
+            <!-- ID Photos & Selfie Uploads -->
+            <div class="space-y-4 pt-2 border-t border-slate-100">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700">3. Identity Documents & Selfie Upload</h3>
+                  <p class="text-xs text-slate-500">Required for client trust and police clearance vetting.</p>
+                </div>
+                <span class="text-[11px] bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded">Encrypted & Vetted</span>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                
+                <!-- 1. Runner Selfie / Avatar -->
+                <div class="p-4 bg-slate-50 border-2 border-dashed border-slate-300 hover:border-brand-500 rounded-xl text-center space-y-2 cursor-pointer transition relative" onclick="document.getElementById('file-runner-avatar').click()">
+                  <input type="file" id="file-runner-avatar" accept="image/*" class="hidden" onchange="app.handleImagePreview(this, 'preview-runner-avatar')">
+                  <div class="w-16 h-16 rounded-full overflow-hidden mx-auto bg-slate-200 border-2 border-white shadow-xs flex items-center justify-center">
+                    <img id="preview-runner-avatar" src="" alt="Selfie" class="w-full h-full object-cover hidden">
+                    <i data-lucide="camera" id="icon-runner-avatar" class="w-6 h-6 text-slate-400"></i>
+                  </div>
+                  <div class="text-xs font-bold text-slate-800">Clear Photo of You</div>
+                  <p class="text-[10px] text-slate-500">A clear face selfie for customer identification.</p>
+                  <span class="text-[11px] text-brand-600 font-semibold underline block">Choose Photo</span>
+                </div>
+
+                <!-- 2. National ID FRONT Photo -->
+                <div class="p-4 bg-slate-50 border-2 border-dashed border-slate-300 hover:border-brand-500 rounded-xl text-center space-y-2 cursor-pointer transition relative" onclick="document.getElementById('file-runner-id-front').click()">
+                  <input type="file" id="file-runner-id-front" accept="image/*" class="hidden" onchange="app.handleImagePreview(this, 'preview-runner-id-front')">
+                  <div class="w-full h-16 rounded-lg overflow-hidden mx-auto bg-slate-200 border border-slate-300 flex items-center justify-center">
+                    <img id="preview-runner-id-front" src="" alt="ID Front" class="w-full h-full object-cover hidden">
+                    <i data-lucide="credit-card" id="icon-runner-id-front" class="w-6 h-6 text-slate-400"></i>
+                  </div>
+                  <div class="text-xs font-bold text-slate-800">Photo of ID (Front)</div>
+                  <p class="text-[10px] text-slate-500">Clear picture showing your name, photo, & ID number.</p>
+                  <span class="text-[11px] text-brand-600 font-semibold underline block">Choose File</span>
+                </div>
+
+                <!-- 3. National ID BACKWARD (BACK) Photo -->
+                <div class="p-4 bg-slate-50 border-2 border-dashed border-slate-300 hover:border-brand-500 rounded-xl text-center space-y-2 cursor-pointer transition relative" onclick="document.getElementById('file-runner-id-back').click()">
+                  <input type="file" id="file-runner-id-back" accept="image/*" class="hidden" onchange="app.handleImagePreview(this, 'preview-runner-id-back')">
+                  <div class="w-full h-16 rounded-lg overflow-hidden mx-auto bg-slate-200 border border-slate-300 flex items-center justify-center">
+                    <img id="preview-runner-id-back" src="" alt="ID Back" class="w-full h-full object-cover hidden">
+                    <i data-lucide="scan" id="icon-runner-id-back" class="w-6 h-6 text-slate-400"></i>
+                  </div>
+                  <div class="text-xs font-bold text-slate-800">Photo of ID (Backward/Back)</div>
+                  <p class="text-[10px] text-slate-500">Clear picture showing the barcode and thumbprint.</p>
+                  <span class="text-[11px] text-brand-600 font-semibold underline block">Choose File</span>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Agreement & Submit -->
+            <div class="pt-4 border-t border-slate-100 space-y-3">
+              <label class="flex items-start gap-2.5 text-xs text-slate-600 cursor-pointer">
+                <input type="checkbox" required class="rounded text-brand-600 focus:ring-brand-500 mt-0.5">
+                <span>I confirm that the ID documents provided are authentic and belong to me. I agree to adhere to ChapChap customer safety, confidentiality, and promptness standards.</span>
+              </label>
+
+              <button type="submit" id="btn-submit-runner-reg" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm rounded-xl shadow-md transition flex items-center justify-center gap-2">
+                <i data-lucide="shield-check" class="w-5 h-5"></i>
+                <span>Submit Runner Application for Verification</span>
+              </button>
+            </div>
+
+          </form>
+
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- VIEW 3: RUNNER PORTAL                      -->
+      <!-- ========================================== -->
+      <section id="runner-view" class="space-y-6 hidden">
+        
+        <!-- Runner Status & Identity Bar -->
+        <div class="clean-card p-4 sm:p-6 bg-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-l-4 border-l-amber-500">
+          <div class="flex items-center space-x-4">
+            <img id="runner-current-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" alt="Runner Avatar" class="w-14 h-14 rounded-full object-cover border-2 border-amber-500 shadow-sm">
+            <div>
+              <div class="flex items-center space-x-2">
+                <h2 id="runner-current-name" class="font-extrabold text-lg text-slate-900">Brian Mwangi</h2>
+                <span id="runner-current-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">Top Rated Runner</span>
+              </div>
+              <p id="runner-current-id-number" class="text-xs text-slate-500">ID: 34***892 (Police Clearance Checked)</p>
+              <div class="flex items-center gap-3 text-xs text-slate-600 mt-1">
+                <span class="flex items-center gap-1 text-emerald-600 font-semibold">
+                  <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+                  <span id="runner-current-location">CBD / Kencom Stage</span>
+                </span>
+                <span>•</span>
+                <span class="flex items-center gap-1 font-medium">
+                  <i data-lucide="star" class="w-3.5 h-3.5 text-amber-500 fill-amber-500"></i>
+                  <span id="runner-current-rating">4.9 ★ (148 runs)</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3 w-full sm:w-auto">
+            <div id="runner-active-status-box" class="bg-slate-50 px-3 py-2 rounded-xl border border-slate-200 text-center flex-1 sm:flex-initial">
+              <span class="text-[10px] uppercase text-slate-400 font-bold block">Status</span>
+              <span class="text-xs font-bold text-emerald-600 flex items-center justify-center gap-1" id="runner-status-indicator">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Active & Vetted
+              </span>
+            </div>
+            <button onclick="app.openAuthModal('runner-login')" class="px-3 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-xl transition">
+              Runner Login
+            </button>
+          </div>
+        </div>
+
+        <!-- Pending Banner if runner is pending -->
+        <div id="runner-pending-alert" class="hidden p-4 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900 flex items-center gap-3">
+          <i data-lucide="clock" class="w-6 h-6 text-amber-600 shrink-0"></i>
+          <div>
+            <strong>Application Under Review:</strong> Your uploaded ID Front and ID Back documents are currently undergoing vetting by ChapChap Admin. You can explore available errands, but jobs can be claimed once verified.
+          </div>
+        </div>
+
+        <!-- Runner Tabs -->
+        <div class="flex border-b border-slate-200 space-x-6 text-sm font-semibold">
+          <button id="tab-runner-available" onclick="app.switchRunnerTab('available')" class="pb-3 border-b-2 border-brand-600 text-brand-600 flex items-center gap-2">
+            <i data-lucide="radar" class="w-4 h-4"></i>
+            <span>Available Errands Feed</span>
+            <span id="tab-available-count" class="px-2 py-0.5 rounded-full text-xs bg-brand-100 text-brand-800 font-bold">0</span>
+          </button>
+          <button id="tab-runner-claimed" onclick="app.switchRunnerTab('claimed')" class="pb-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2">
+            <i data-lucide="check-square" class="w-4 h-4"></i>
+            <span>My Claimed Jobs</span>
+            <span id="tab-claimed-count" class="px-2 py-0.5 rounded-full text-xs bg-slate-100 text-slate-700 font-bold">0</span>
+          </button>
+        </div>
+
+        <!-- Available Errands Feed -->
+        <div id="runner-available-container" class="space-y-4">
+          <div class="flex items-center justify-between text-xs text-slate-500">
+            <span>Open tasks waiting for an errand runner in Nairobi:</span>
+            <span class="flex items-center gap-1 text-emerald-600">
+              <i data-lucide="refresh-cw" class="w-3 h-3"></i> Real-time Feed Connected
+            </span>
+          </div>
+
+          <div id="runner-available-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Dynamically populated via JS -->
+          </div>
+        </div>
+
+        <!-- Claimed Runs Container -->
+        <div id="runner-claimed-container" class="space-y-4 hidden">
+          <div id="runner-claimed-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Dynamically populated via JS -->
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ========================================== -->
+      <!-- VIEW 4: ADMIN PORTAL                       -->
+      <!-- ========================================== -->
+      <section id="admin-view" class="space-y-6 hidden">
+        
+        <!-- Admin Header -->
+        <div class="clean-card p-6 bg-slate-900 text-white rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div class="flex items-center space-x-3">
+            <div class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/30">
+              <i data-lucide="shield-alert" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h2 class="text-xl font-extrabold text-white">ChapChap Operations Admin Portal</h2>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-900 text-emerald-300 border border-emerald-700">Root Super Admin</span>
+              </div>
+              <p class="text-xs text-slate-400">Review runner ID documents, verify M-Pesa transactions, and manage live dispatch</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="app.refreshAdminData()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded-xl text-slate-300 flex items-center gap-1.5 transition">
+              <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Refresh Data
+            </button>
+            <button onclick="app.adminLogout()" class="px-3 py-2 bg-rose-600/20 hover:bg-rose-600/30 text-rose-300 border border-rose-500/30 text-xs font-semibold rounded-xl transition">
+              Exit Admin
+            </button>
+          </div>
+        </div>
+
+        <!-- Admin Metrics Cards -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="admin-metrics-container">
+          <div class="clean-card p-4 bg-white border border-slate-200">
+            <span class="text-xs font-medium text-slate-500 block">Total Errands</span>
+            <span class="text-2xl font-extrabold text-slate-900 mt-1 block" id="adm-metric-errands">0</span>
+            <span class="text-[10px] text-emerald-600 font-semibold" id="adm-metric-completed">0 completed</span>
+          </div>
+          <div class="clean-card p-4 bg-white border border-slate-200">
+            <span class="text-xs font-medium text-slate-500 block">Gross Volume</span>
+            <span class="text-2xl font-extrabold text-emerald-700 mt-1 block" id="adm-metric-revenue">KES 0</span>
+            <span class="text-[10px] text-slate-400 font-medium">Estimated task turnover</span>
+          </div>
+          <div class="clean-card p-4 bg-white border border-slate-200">
+            <span class="text-xs font-medium text-slate-500 block">Matatu Fare Paid</span>
+            <span class="text-2xl font-extrabold text-slate-900 mt-1 block" id="adm-metric-transit">KES 0</span>
+            <span class="text-[10px] text-emerald-600 font-semibold">Paid to runner transit</span>
+          </div>
+          <div class="clean-card p-4 bg-white border border-slate-200">
+            <span class="text-xs font-medium text-slate-500 block">Runners Under Review</span>
+            <span class="text-2xl font-extrabold text-amber-600 mt-1 block" id="adm-metric-pending-runners">0</span>
+            <span class="text-[10px] text-slate-400 font-semibold" id="adm-metric-total-runners">0 total registered</span>
+          </div>
+        </div>
+
+        <!-- Admin Tabs -->
+        <div class="flex border-b border-slate-200 space-x-6 text-sm font-semibold">
+          <button id="tab-adm-runners" onclick="app.switchAdminTab('runners')" class="pb-3 border-b-2 border-brand-600 text-brand-600 flex items-center gap-2">
+            <i data-lucide="users" class="w-4 h-4"></i>
+            <span>Runner Verification & Documents</span>
+            <span id="adm-badge-pending" class="px-2 py-0.5 rounded-full text-xs bg-amber-100 text-amber-800 font-bold">0</span>
+          </button>
+          <button id="tab-adm-errands" onclick="app.switchAdminTab('errands')" class="pb-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2">
+            <i data-lucide="list" class="w-4 h-4"></i>
+            <span>All Platform Errands & Payments</span>
+          </button>
+        </div>
+
+        <!-- Section: Runner Verification Applications -->
+        <div id="adm-runners-container" class="space-y-4">
+          <div class="clean-card bg-white border border-slate-200 overflow-hidden">
+            <div class="p-4 border-b border-slate-100 flex items-center justify-between">
+              <h3 class="font-bold text-sm text-slate-900">Registered Errand Runners (Inspect ID Front & Back)</h3>
+              <span class="text-xs text-slate-500">Review documents carefully before approval</span>
+            </div>
+            <div class="divide-y divide-slate-100" id="admin-runners-table-body">
+              <!-- Dynamically populated via JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Section: Errand & Payment Management -->
+        <div id="adm-errands-container" class="space-y-4 hidden">
+          <div class="clean-card bg-white border border-slate-200 overflow-hidden">
+            <div class="p-4 border-b border-slate-100 flex items-center justify-between">
+              <h3 class="font-bold text-sm text-slate-900">All Placed Errands & Manual M-Pesa Tills</h3>
+              <span class="text-xs text-slate-500">Verify manual payments with Till 542890</span>
+            </div>
+            <div class="divide-y divide-slate-100" id="admin-errands-table-body">
+              <!-- Dynamically populated via JS -->
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ========================================== -->
+      <!-- VIEW 5: SPLIT DUAL SCREEN DEMO VIEW        -->
+      <!-- ========================================== -->
+      <section id="split-view" class="hidden space-y-4">
+        <div class="bg-slate-900 text-white p-3 rounded-xl flex items-center justify-between text-xs">
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 rounded bg-emerald-500 text-slate-900 font-bold">Split Preview</span>
+            <span>Customer view on the left, Runner view on the right. Post an errand and watch it appear on the right!</span>
+          </div>
+          <button onclick="app.setViewMode('customer')" class="text-slate-300 hover:text-white underline">Back to Normal View</button>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-white p-4 rounded-xl border border-slate-200">
+            <h3 class="font-bold text-sm text-slate-800 mb-3 flex items-center gap-1.5 border-b pb-2">
+              <i data-lucide="user" class="w-4 h-4 text-brand-600"></i> Customer Side (Track & PIN)
+            </h3>
+            <div id="split-customer-content" class="space-y-4"></div>
+          </div>
+          <div class="bg-white p-4 rounded-xl border border-slate-200">
+            <h3 class="font-bold text-sm text-slate-800 mb-3 flex items-center gap-1.5 border-b pb-2">
+              <i data-lucide="bike" class="w-4 h-4 text-amber-500"></i> Errand Runner Side (Claim & Verify PIN)
+            </h3>
+            <div id="split-runner-content" class="space-y-4"></div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ========================================== -->
+  <!-- MODAL: AUTH MODAL (LOGIN & SIGN UP)        -->
+  <!-- ========================================== -->
+  <div id="auth-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-5">
+      
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-brand-100 text-brand-700 flex items-center justify-center font-bold">
+            <i data-lucide="lock" class="w-4 h-4"></i>
+          </div>
+          <h3 class="font-extrabold text-base text-slate-900" id="auth-modal-title">Customer Sign In</h3>
+        </div>
+        <button onclick="app.closeAuthModal()" class="text-slate-400 hover:text-slate-600 p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Auth Tabs -->
+      <div class="grid grid-cols-3 gap-1 bg-slate-100 p-1 rounded-xl text-xs font-semibold">
+        <button type="button" id="tab-auth-customer" onclick="app.switchAuthTab('customer-login')" class="py-1.5 rounded-lg bg-white shadow-xs text-slate-900">Customer</button>
+        <button type="button" id="tab-auth-runner" onclick="app.switchAuthTab('runner-login')" class="py-1.5 rounded-lg text-slate-600 hover:text-slate-900">Runner</button>
+        <button type="button" id="tab-auth-admin" onclick="app.switchAuthTab('admin-login')" class="py-1.5 rounded-lg text-slate-600 hover:text-slate-900">Admin</button>
+      </div>
+
+      <!-- Customer Login Form -->
+      <form id="form-customer-login" onsubmit="app.handleCustomerLogin(event)" class="space-y-3.5">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Email Address</label>
+          <input type="email" id="login-cust-email" required value="mary@example.com" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 focus:border-brand-500 outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Password</label>
+          <input type="password" id="login-cust-pass" required value="customer123" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 focus:border-brand-500 outline-none">
+        </div>
+        <button type="submit" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs rounded-xl shadow transition">
+          Sign In as Customer
+        </button>
+        <div class="text-center text-xs text-slate-500 pt-2">
+          Don't have an account? <button type="button" onclick="app.switchAuthTab('customer-register')" class="text-brand-600 font-bold hover:underline">Create Account</button>
+        </div>
+      </form>
+
+      <!-- Customer Registration Form -->
+      <form id="form-customer-register" onsubmit="app.handleCustomerRegister(event)" class="space-y-3.5 hidden">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Full Name</label>
+          <input type="text" id="reg-cust-name" required placeholder="e.g. Mary Wanjiku" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 focus:border-brand-500 outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Phone Number</label>
+          <input type="tel" id="reg-cust-phone" required placeholder="e.g. +254 712 990 011" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 focus:border-brand-500 outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Email Address</label>
+          <input type="email" id="reg-cust-email" required placeholder="e.g. mary@example.com" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 focus:border-brand-500 outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Create Password</label>
+          <input type="password" id="reg-cust-pass" required placeholder="Min 6 characters" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 focus:border-brand-500 outline-none">
+        </div>
+        <button type="submit" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs rounded-xl shadow transition">
+          Create Customer Account
+        </button>
+        <div class="text-center text-xs text-slate-500 pt-2">
+          Already registered? <button type="button" onclick="app.switchAuthTab('customer-login')" class="text-brand-600 font-bold hover:underline">Sign In</button>
+        </div>
+      </form>
+
+      <!-- Runner Login Form -->
+      <form id="form-runner-login" onsubmit="app.handleRunnerLogin(event)" class="space-y-3.5 hidden">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Runner Email or Phone</label>
+          <input type="text" id="login-run-term" required value="brian@chapchap.co.ke" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 focus:border-brand-500 outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Password</label>
+          <input type="password" id="login-run-pass" required value="runner123" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 focus:border-brand-500 outline-none">
+        </div>
+        <button type="submit" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs rounded-xl shadow transition">
+          Sign In to Runner Portal
+        </button>
+        <div class="text-center text-xs text-slate-500 pt-2">
+          Want to become an errand runner? <button type="button" onclick="app.closeAuthModal(); app.setViewMode('register-runner')" class="text-amber-600 font-bold hover:underline">Register Here</button>
+        </div>
+      </form>
+
+      <!-- Admin Login Form -->
+      <form id="form-admin-login" onsubmit="app.handleAdminLogin(event)" class="space-y-3.5 hidden">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Admin Email</label>
+          <input type="email" id="login-adm-email" required value="admin@chapchap.co.ke" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 focus:border-brand-500 outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Admin Password</label>
+          <input type="password" id="login-adm-pass" required value="admin123" class="w-full px-3 py-2 text-sm rounded-xl border border-slate-300 focus:border-brand-500 outline-none">
+        </div>
+        <button type="submit" class="w-full py-2.5 bg-slate-900 hover:bg-black text-white font-bold text-xs rounded-xl shadow transition">
+          Sign In to Admin Portal
+        </button>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: ADMIN ID DOCUMENT INSPECTOR         -->
+  <!-- ========================================== -->
+  <div id="admin-doc-modal" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-slate-200 space-y-4 max-h-[90vh] overflow-y-auto">
+      
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center space-x-3">
+          <img id="modal-doc-avatar" src="" alt="Runner Photo" class="w-12 h-12 rounded-full object-cover border-2 border-emerald-500">
+          <div>
+            <h4 class="font-extrabold text-base text-slate-900" id="modal-doc-name">Runner Name</h4>
+            <p class="text-xs text-slate-500" id="modal-doc-id-num">ID: 34892104</p>
+          </div>
+        </div>
+        <button onclick="app.closeAdminDocModal()" class="text-slate-400 hover:text-slate-600 p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Front and Back Photos Inspection Grid -->
+      <div class="space-y-3">
+        <h5 class="text-xs font-bold uppercase tracking-wider text-slate-600">National ID Documents Inspection</h5>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- Front ID -->
+          <div class="space-y-1.5">
+            <span class="text-xs font-semibold text-slate-700 flex items-center gap-1">
+              <i data-lucide="credit-card" class="w-3.5 h-3.5 text-emerald-600"></i> Front Side of National ID:
+            </span>
+            <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-100 h-52 flex items-center justify-center">
+              <img id="modal-doc-front" src="" alt="ID Front" class="w-full h-full object-cover">
+            </div>
+          </div>
+
+          <!-- Back ID -->
+          <div class="space-y-1.5">
+            <span class="text-xs font-semibold text-slate-700 flex items-center gap-1">
+              <i data-lucide="scan" class="w-3.5 h-3.5 text-blue-600"></i> Backward (Back) Side of National ID:
+            </span>
+            <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-100 h-52 flex items-center justify-center">
+              <img id="modal-doc-back" src="" alt="ID Back" class="w-full h-full object-cover">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Verification Buttons -->
+      <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-3" id="modal-doc-actions">
+        <!-- Injected via JS -->
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: ORDER CREATED SUCCESS & DEMO PAY    -->
+  <!-- ========================================== -->
+  <div id="order-success-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+      <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 mx-auto">
+        <i data-lucide="check" class="w-6 h-6"></i>
+      </div>
+      <div class="text-center space-y-1">
+        <h3 class="text-xl font-extrabold text-slate-900">Errand Posted Successfully!</h3>
+        <p class="text-xs text-slate-500">Order ID: <span id="modal-order-id" class="font-mono font-bold text-brand-600">ERR-XXXX</span></p>
+      </div>
+
+      <!-- Secret Customer PIN Highlight Box -->
+      <div class="pin-secret-box p-4 text-center space-y-1">
+        <span class="text-[11px] uppercase tracking-wider text-emerald-400 font-bold block">Your Secret Delivery Verification PIN</span>
+        <div class="text-3xl font-extrabold tracking-widest text-white font-mono" id="modal-secret-pin">8492</div>
+        <p class="text-[11px] text-slate-300">
+          ⚠️ <strong>Only exposed to you.</strong> Do NOT give this to anyone until your runner delivers your items!
+        </p>
+      </div>
+
+      <!-- Demo Payment Instruction -->
+      <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2 text-xs">
+        <div class="font-bold text-slate-800 flex items-center gap-1.5">
+          <i data-lucide="banknote" class="w-4 h-4 text-emerald-600"></i>
+          <span>Send Demo Payment:</span>
+        </div>
+        <div class="flex justify-between text-slate-600">
+          <span>Amount:</span>
+          <span class="font-bold text-slate-900" id="modal-amount">KES 320</span>
+        </div>
+        <div class="flex justify-between text-slate-600">
+          <span>Demo M-Pesa Till:</span>
+          <span class="font-mono font-bold text-slate-900">542890</span>
+        </div>
+        <div class="flex justify-between text-slate-600">
+          <span>Demo Phone:</span>
+          <span class="font-mono font-bold text-slate-900">0798 000 123</span>
+        </div>
+        <div class="flex justify-between text-slate-600">
+          <span>Account Ref:</span>
+          <span class="font-mono font-bold text-brand-700" id="modal-ref-id">ERR-XXXX</span>
+        </div>
+      </div>
+
+      <div class="flex gap-3 pt-2">
+        <button onclick="app.closeSuccessModal()" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm rounded-xl transition">
+          View & Track Errand
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: IN-APP LIVE CHAT DRAWER             -->
+  <!-- ========================================== -->
+  <div id="chat-modal" class="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs hidden flex items-center justify-center p-2 sm:p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full h-[620px] max-h-[92vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
+      
+      <!-- Chat Header -->
+      <div class="p-4 bg-slate-900 text-white flex items-center justify-between border-b border-slate-800">
+        <div class="flex items-center space-x-3">
+          <img id="chat-counterpart-avatar" src="" alt="Avatar" class="w-10 h-10 rounded-full object-cover border border-slate-700">
+          <div>
+            <h4 id="chat-counterpart-name" class="font-bold text-sm leading-tight text-white">Brian Mwangi</h4>
+            <p id="chat-errand-title" class="text-[11px] text-slate-400 truncate max-w-[200px]">ERR-7102</p>
+          </div>
+        </div>
+        <div class="flex items-center space-x-2">
+          <a id="chat-call-btn" href="#" class="p-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-emerald-400 transition" title="Direct Phone Call">
+            <i data-lucide="phone" class="w-4 h-4"></i>
+          </a>
+          <button onclick="app.closeChatModal()" class="p-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-400 hover:text-white transition">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Canned Message Pills -->
+      <div class="p-2 bg-slate-50 border-b border-slate-200 overflow-x-auto flex items-center space-x-2 text-xs">
+        <button onclick="app.sendQuickChat('I have arrived at the location!')" class="pill-button">📍 Arrived</button>
+        <button onclick="app.sendQuickChat('Waiting in line, counter is moving.')" class="pill-button">⏳ In queue</button>
+        <button onclick="app.sendQuickChat('Boarding the matatu now!')" class="pill-button">🚌 On matatu</button>
+        <button onclick="app.sendQuickChat('I am outside your gate.')" class="pill-button">🚪 Outside gate</button>
+      </div>
+
+      <!-- Message History Container -->
+      <div id="chat-messages-container" class="flex-1 p-4 overflow-y-auto space-y-3 bg-slate-100">
+        <!-- Messages rendered via JS -->
+      </div>
+
+      <!-- Chat Input Footer -->
+      <form id="chat-form" onsubmit="app.handleSendMessage(event)" class="p-3 bg-white border-t border-slate-200 flex items-center space-x-2">
+        <input type="text" id="chat-input-text" placeholder="Type a message..." required class="flex-1 px-3.5 py-2 text-sm rounded-xl border border-slate-300 focus:border-brand-500 outline-none">
+        <button type="submit" class="p-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl shadow-sm transition">
+          <i data-lucide="send" class="w-4 h-4"></i>
+        </button>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: VERIFY RELEASE PIN (FOR RUNNERS)    -->
+  <!-- ========================================== -->
+  <div id="verify-pin-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+      <div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center text-amber-600 mx-auto">
+        <i data-lucide="key" class="w-6 h-6"></i>
+      </div>
+      <div class="text-center space-y-1">
+        <h3 class="text-lg font-bold text-slate-900">Verify Customer Secret PIN</h3>
+        <p class="text-xs text-slate-500">Ask the customer for the 4-digit secret PIN visible on their screen to complete and confirm delivery.</p>
+      </div>
+
+      <div class="space-y-3">
+        <input type="text" id="verify-pin-input" maxlength="4" placeholder="Enter 4-digit PIN" class="w-full text-center text-2xl tracking-widest font-mono font-bold py-2.5 rounded-xl border border-slate-300 focus:border-amber-500 outline-none">
+        <div id="verify-pin-error" class="text-xs text-rose-600 font-medium text-center hidden">Incorrect PIN. Try again.</div>
+      </div>
+
+      <div class="flex gap-2">
+        <button onclick="app.closeVerifyPinModal()" class="w-1/2 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition">
+          Cancel
+        </button>
+        <button onclick="app.submitVerifyPin()" class="w-1/2 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow transition">
+          Verify & Complete
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 py-6 px-4 mt-auto">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-3">
+      <div class="flex items-center space-x-2">
+        <span class="font-bold text-slate-700">ChapChap Errands</span>
+        <span>•</span>
+        <span>Transparent Runner Labor + Matatu Transit Fare Engine</span>
+      </div>
+      <div class="flex items-center space-x-4">
+        <button onclick="app.setViewMode('register-runner')" class="hover:text-emerald-600 font-medium">Become a Runner</button>
+        <span>•</span>
+        <button onclick="app.openAdminPortal()" class="hover:text-emerald-600 font-medium">Admin Portal</button>
+        <span>•</span>
+        <span>Manual Demo Payments: Till 542890</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Main JavaScript App -->
+  <script src="app.js"></script>
+</body>
+</html>

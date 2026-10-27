@@ -1,0 +1,370 @@
+{
+  "users": [
+    {
+      "id": "USR-101",
+      "name": "Mary Wanjiku",
+      "email": "mary@example.com",
+      "phone": "+254 712 990 011",
+      "password": "customer123",
+      "role": "customer",
+      "createdAt": "2026-10-27T10:00:00.000Z"
+    },
+    {
+      "id": "USR-102",
+      "name": "David Ochieng",
+      "email": "david@example.com",
+      "phone": "+254 711 888 999",
+      "password": "customer123",
+      "role": "customer",
+      "createdAt": "2026-10-27T11:00:00.000Z"
+    },
+    {
+      "id": "USR-1973",
+      "name": "Esther Muthoni",
+      "email": "testuser_1793114920636@example.com",
+      "phone": "+254 712 889 900",
+      "password": "password123",
+      "role": "customer",
+      "createdAt": "2026-10-27T15:28:40.775Z"
+    }
+  ],
+  "admins": [
+    {
+      "id": "ADM-001",
+      "name": "Super Admin",
+      "email": "admin@chapchap.co.ke",
+      "password": "admin123",
+      "role": "admin"
+    }
+  ],
+  "runners": [
+    {
+      "id": "RUN-784",
+      "name": "Samuel Omondi",
+      "email": "runner_1793114920788@chapchap.co.ke",
+      "phone": "+254 799 374781",
+      "password": "runnerpassword123",
+      "idNumber": "39201482",
+      "idNumberVerified": "ID: 39***482 (Police Clearance & ID Verified)",
+      "avatar": "/uploads/avatar-1793114920788-936.png",
+      "idCardFront": "/uploads/id-front-1793114920789-7392.png",
+      "idCardBack": "/uploads/id-back-1793114920790-2765.png",
+      "verificationStatus": "approved",
+      "rating": 5,
+      "completedErrands": 1,
+      "activeLocation": "Westlands / Sarit Centre",
+      "bio": "Punctual runner with good knowledge of Westlands and CBD routes",
+      "vehicleType": "Foot & Matatu Transit",
+      "badge": "Verified Pro",
+      "createdAt": "2026-10-27T15:28:40.908Z"
+    },
+    {
+      "id": "RUN-101",
+      "name": "Brian Mwangi",
+      "email": "brian@chapchap.co.ke",
+      "phone": "+254 712 345 678",
+      "password": "runner123",
+      "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80",
+      "idNumber": "34892104",
+      "idNumberVerified": "ID: 34***892 (Police Clearance Checked)",
+      "idCardFront": "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=600&q=80",
+      "idCardBack": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80",
+      "verificationStatus": "approved",
+      "rating": 4.9,
+      "completedErrands": 148,
+      "activeLocation": "CBD / Kencom Stage",
+      "bio": "Punctual, familiar with all government offices, supermarkets & CBD stages.",
+      "vehicleType": "Foot & Matatu Transit",
+      "badge": "Top Rated Runner",
+      "createdAt": "2026-10-20T08:00:00.000Z"
+    },
+    {
+      "id": "RUN-102",
+      "name": "Faith Chebet",
+      "email": "faith@chapchap.co.ke",
+      "phone": "+254 723 987 654",
+      "password": "runner123",
+      "avatar": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80",
+      "idNumber": "29411902",
+      "idNumberVerified": "ID: 29***411 (Vetted & Verified)",
+      "idCardFront": "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=600&q=80",
+      "idCardBack": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80",
+      "verificationStatus": "approved",
+      "rating": 4.95,
+      "completedErrands": 94,
+      "activeLocation": "Westlands / Sarit Centre",
+      "bio": "Specialist in grocery shopping, pharmacy runs & careful document handling.",
+      "vehicleType": "Matatu & Walking",
+      "badge": "Verified Pro",
+      "createdAt": "2026-10-21T09:30:00.000Z"
+    },
+    {
+      "id": "RUN-103",
+      "name": "Kevin Otieno",
+      "email": "kevin@chapchap.co.ke",
+      "phone": "+254 734 555 123",
+      "password": "runner123",
+      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80",
+      "idNumber": "32604819",
+      "idNumberVerified": "ID: 32***604 (Vetted & Verified)",
+      "idCardFront": "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=600&q=80",
+      "idCardBack": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80",
+      "verificationStatus": "approved",
+      "rating": 4.8,
+      "completedErrands": 215,
+      "activeLocation": "Kilimani / Yaya Centre",
+      "bio": "Fast queue handling at Huduma Centre, KRA, and urgent parcel errands.",
+      "vehicleType": "Matatu Transit",
+      "badge": "Speed Champion",
+      "createdAt": "2026-10-22T10:15:00.000Z"
+    },
+    {
+      "id": "RUN-104",
+      "name": "Dennis Kiprono",
+      "email": "dennis@chapchap.co.ke",
+      "phone": "+254 799 444 888",
+      "password": "runner123",
+      "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80",
+      "idNumber": "38192041",
+      "idNumberVerified": "ID: 38***041 (Application Under Review)",
+      "idCardFront": "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=600&q=80",
+      "idCardBack": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80",
+      "verificationStatus": "pending",
+      "rating": 5,
+      "completedErrands": 0,
+      "activeLocation": "Roysambu / Thika Rd",
+      "bio": "New runner eager to deliver parcels and groceries along Thika Road.",
+      "vehicleType": "Matatu & Boda",
+      "badge": "Pending Verification",
+      "createdAt": "2026-10-27T12:00:00.000Z"
+    }
+  ],
+  "stages": [
+    {
+      "from": "CBD (Kencom/Railways)",
+      "to": "Westlands",
+      "standardFare": 50,
+      "peakFare": 70,
+      "distanceKm": 4.5
+    },
+    {
+      "from": "CBD (Kencom/Railways)",
+      "to": "Kilimani / Yaya",
+      "standardFare": 60,
+      "peakFare": 80,
+      "distanceKm": 5.2
+    },
+    {
+      "from": "CBD (Kencom/Railways)",
+      "to": "Upperhill",
+      "standardFare": 40,
+      "peakFare": 50,
+      "distanceKm": 3.1
+    },
+    {
+      "from": "CBD (Kencom/Railways)",
+      "to": "Roysambu / Thika Rd",
+      "standardFare": 80,
+      "peakFare": 120,
+      "distanceKm": 12
+    },
+    {
+      "from": "CBD (Kencom/Railways)",
+      "to": "Karen / Galleria",
+      "standardFare": 100,
+      "peakFare": 150,
+      "distanceKm": 18
+    },
+    {
+      "from": "CBD (Kencom/Railways)",
+      "to": "South B / South C",
+      "standardFare": 50,
+      "peakFare": 70,
+      "distanceKm": 5.8
+    },
+    {
+      "from": "CBD (Kencom/Railways)",
+      "to": "Eastleigh / Pangani",
+      "standardFare": 40,
+      "peakFare": 60,
+      "distanceKm": 4
+    },
+    {
+      "from": "Westlands",
+      "to": "Kilimani",
+      "standardFare": 60,
+      "peakFare": 80,
+      "distanceKm": 4.8
+    },
+    {
+      "from": "Kilimani",
+      "to": "Upperhill",
+      "standardFare": 50,
+      "peakFare": 60,
+      "distanceKm": 3.8
+    }
+  ],
+  "errands": [
+    {
+      "id": "ERR-1442",
+      "customerId": "USR-1973",
+      "title": "Document Legalization at Sheria House & Drop to Upperhill",
+      "category": "queueing",
+      "description": "Stamp birth certificate at Sheria House, Harambee Ave, then drop off at Britam Tower",
+      "pickupLocation": "Sheria House, Harambee Avenue, CBD",
+      "dropoffLocation": "Upperhill, Britam Tower, 7th Floor",
+      "customerLocation": "Upperhill, Britam Tower",
+      "customerName": "Esther Muthoni",
+      "customerPhone": "+254 712 889 900",
+      "customerSecretPin": "3513",
+      "urgency": "standard",
+      "matatuStageFrom": "CBD (Kencom/Railways)",
+      "matatuStageTo": "Upperhill",
+      "matatuFare": 50,
+      "baseServiceFee": 380,
+      "transitAllowance": 50,
+      "distanceKm": 3.1,
+      "estimatedTotal": 430,
+      "status": "completed",
+      "runnerId": "RUN-784",
+      "runner": {
+        "id": "RUN-784",
+        "name": "Samuel Omondi",
+        "email": "runner_1793114920788@chapchap.co.ke",
+        "phone": "+254 799 374781",
+        "idNumber": "39201482",
+        "idNumberVerified": "ID: 39***482 (Police Clearance & ID Verified)",
+        "avatar": "/uploads/avatar-1793114920788-936.png",
+        "verificationStatus": "approved",
+        "rating": 5,
+        "completedErrands": 0,
+        "activeLocation": "Westlands / Sarit Centre",
+        "bio": "Punctual runner with good knowledge of Westlands and CBD routes",
+        "vehicleType": "Foot & Matatu Transit",
+        "badge": "Verified Pro",
+        "createdAt": "2026-10-27T15:28:40.908Z"
+      },
+      "createdAt": "2026-10-27T15:28:40.921Z",
+      "demoPaymentAccount": "Till: 542890 (ChapChap Errands Hub)",
+      "demoPaymentPhone": "+254 798 000 123",
+      "paymentStatus": "Pending Manual M-Pesa",
+      "messages": [
+        {
+          "id": "msg-1793114920925",
+          "senderType": "system",
+          "senderName": "System",
+          "text": "🎉 Errand picked up by Samuel Omondi (Verified Pro). You can now chat or call directly!",
+          "timestamp": "18:28"
+        },
+        {
+          "id": "msg-1793114920956",
+          "senderType": "runner",
+          "senderName": "Samuel Omondi",
+          "text": "Habari Esther! I am currently heading to Sheria House.",
+          "timestamp": "18:28"
+        },
+        {
+          "id": "msg-1793114920959",
+          "senderType": "customer",
+          "senderName": "Esther Muthoni",
+          "text": "Asante Samuel. Please tell me when you get there.",
+          "timestamp": "18:28"
+        },
+        {
+          "id": "msg-1793114920962",
+          "senderType": "system",
+          "senderName": "Security Verification",
+          "text": "✅ Verified with Customer Secret Release PIN (3513). Errand marked complete!",
+          "timestamp": "18:28"
+        }
+      ],
+      "claimedAt": "2026-10-27T15:28:40.925Z",
+      "completedAt": "2026-10-27T15:28:40.962Z",
+      "verifiedReleasePin": "3513"
+    },
+    {
+      "id": "ERR-7102",
+      "customerId": "USR-101",
+      "title": "Urgent Prescription Pickup at Goodlife Pharmacy",
+      "category": "pharmacy",
+      "description": "Please buy Ventolin Inhaler and Panadol Extra from Goodlife Pharmacy (Sarit Centre) and deliver to my apartment in Westlands.",
+      "pickupLocation": "Goodlife Pharmacy, Sarit Centre, Westlands",
+      "dropoffLocation": "Westlands, Rhapta Road, Block 4 Apt 2B",
+      "customerLocation": "Westlands, Rhapta Road",
+      "customerName": "Mary Wanjiku",
+      "customerPhone": "+254 712 990 011",
+      "customerSecretPin": "4821",
+      "urgency": "urgent",
+      "matatuStageFrom": "CBD (Kencom/Railways)",
+      "matatuStageTo": "Westlands",
+      "matatuFare": 70,
+      "baseServiceFee": 250,
+      "transitAllowance": 70,
+      "distanceKm": 4.5,
+      "estimatedTotal": 320,
+      "status": "available",
+      "runnerId": null,
+      "runner": null,
+      "createdAt": "2026-10-27T16:00:00.000Z",
+      "demoPaymentAccount": "Till: 542890 (ChapChap Errands Hub)",
+      "demoPaymentPhone": "+254 798 000 123",
+      "paymentStatus": "Pending Manual M-Pesa",
+      "messages": []
+    },
+    {
+      "id": "ERR-7103",
+      "customerId": "USR-102",
+      "title": "Collect Land Search Certificate from Huduma Centre GPO",
+      "category": "queueing",
+      "description": "Queue at Counter 8, Huduma Centre GPO, show tracking ticket #HC-9921 to collect the physical stamped search document. Then drop it at Upperhill law firm.",
+      "pickupLocation": "Huduma Centre GPO, Nairobi CBD",
+      "dropoffLocation": "Upperhill, 5th Ngong Ave, Britam Tower, 12th Floor",
+      "customerLocation": "Upperhill, Britam Tower",
+      "customerName": "David Ochieng",
+      "customerPhone": "+254 711 888 999",
+      "customerSecretPin": "9154",
+      "urgency": "standard",
+      "matatuStageFrom": "CBD (Kencom/Railways)",
+      "matatuStageTo": "Upperhill",
+      "matatuFare": 50,
+      "baseServiceFee": 400,
+      "transitAllowance": 50,
+      "distanceKm": 3.5,
+      "estimatedTotal": 450,
+      "status": "claimed",
+      "runnerId": "RUN-101",
+      "runner": {
+        "id": "RUN-101",
+        "name": "Brian Mwangi",
+        "phone": "+254 712 345 678",
+        "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80",
+        "idNumberVerified": "ID: 34***892 (Police Clearance Checked)",
+        "rating": 4.9,
+        "completedErrands": 148,
+        "activeLocation": "CBD / Kencom Stage",
+        "badge": "Top Rated Runner"
+      },
+      "claimedAt": "2026-10-27T16:20:00.000Z",
+      "createdAt": "2026-10-27T15:30:00.000Z",
+      "demoPaymentAccount": "Till: 542890 (ChapChap Errands Hub)",
+      "demoPaymentPhone": "+254 798 000 123",
+      "paymentStatus": "Verified",
+      "messages": [
+        {
+          "id": "msg-1",
+          "senderType": "runner",
+          "senderName": "Brian Mwangi",
+          "text": "Habari David! I have reached Huduma Centre. Currently on ticket 42 at counter 8.",
+          "timestamp": "04:25 PM"
+        },
+        {
+          "id": "msg-2",
+          "senderType": "customer",
+          "senderName": "David Ochieng",
+          "text": "Asante sana Brian. Reception at Britam Tower is informed to receive it.",
+          "timestamp": "04:28 PM"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "name": "chapchap-errands",
+  "version": "1.0.0",
+  "description": "On-demand minimalist errand service web platform with matatu fare quantification, live runner matching, identity disclosure, and in-app chat",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "errands",
+    "delivery",
+    "matatu-fare",
+    "runner-marketplace",
+    "minimalist"
+  ],
+  "author": "ChapChap Errands Team",
+  "license": "ISC"
+}
